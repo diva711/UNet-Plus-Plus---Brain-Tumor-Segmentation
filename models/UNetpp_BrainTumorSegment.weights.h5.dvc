@@ -1,0 +1,5 @@
+outs:
+- md5: c6e1525f6d4544f5507988f1852fb50d
+  size: 108772864
+  hash: md5
+  path: UNetpp_BrainTumorSegment.weights.h5

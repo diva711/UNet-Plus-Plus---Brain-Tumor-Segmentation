@@ -1,7 +1,7 @@
+import numpy as np
 import os
 import sys
 import random
-import numpy as np
 import cv2
 import gc
 import tensorflow as tf
@@ -63,7 +63,8 @@ class ImageDataGen(tf.keras.utils.Sequence):
         image = image/255.0
         mask = mask/255.0
         
-        return image, mask
+        return image.astype(np.float32).reshape(self.image_size, self.image_size, 1), \
+       mask.astype(np.float32).reshape(self.image_size, self.image_size, 1)
     
     def __getitem__(self, index):
         
