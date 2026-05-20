@@ -1,0 +1,39 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run_pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install dvc[s3]
+          pip install tensorflow opencv-python numpy matplotlib tqdm h5py
+
+      - name: Configure DVC remote
+        run: |
+          dvc remote modify origin --local auth basic
+          dvc remote modify origin --local user divachandra583
+          dvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
+
+      - name: Pull data from DagsHub
+        run: |
+          dvc pull models/UNetpp_BrainTumorSegment.weights.h5.dvc --force
+
+      - name: Verify model exists
+        run: |
+          ls -la models/
+          echo "Pipeline completed successfully"
